@@ -19,7 +19,6 @@ class Blockchain {
     newBlock.previousHash = latest_block.hash
     newBlock.hash = newBlock.calculateHash()
     this.chain.push(newBlock)
-    return newBlock
   }
 
   isChainValid() {

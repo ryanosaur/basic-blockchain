@@ -13,7 +13,7 @@ test('new blockchain is valid', () => {
   expect(blockchain.isChainValid()).toBe(true);
 })
 
-test('new blockchain can add block and isValid', () => {
+test('new blockchain can add block and is valid', () => {
   const blockchain = new Blockchain()
   const first_block = blockchain.getLatestBlock()
   blockchain.addBlock(new Block(0, Date.now(), "A new block", '0'))
@@ -21,4 +21,26 @@ test('new blockchain can add block and isValid', () => {
   expect(latest_block.index).toBe(1)
   expect(latest_block.previousHash).toBe(first_block.hash)
   expect(blockchain.isChainValid()).toBe(true)
+})
+
+test('new blockchain can add block and edit block hash and is not valid', () => {
+  const blockchain = new Blockchain()
+  const first_block = blockchain.getLatestBlock()
+  blockchain.addBlock(new Block(0, Date.now(), "A new block", '0'))
+  const latest_block = blockchain.getLatestBlock()
+  expect(latest_block.index).toBe(1)
+  expect(latest_block.previousHash).toBe(first_block.hash)
+  latest_block.hash = 'something else'
+  expect(blockchain.isChainValid()).toBe(false)
+})
+
+test('new blockchain can add block and edit prev block hash and is not valid', () => {
+  const blockchain = new Blockchain()
+  const first_block = blockchain.getLatestBlock()
+  blockchain.addBlock(new Block(0, Date.now(), "A new block", '0'))
+  const latest_block = blockchain.getLatestBlock()
+  expect(latest_block.index).toBe(1)
+  expect(latest_block.previousHash).toBe(first_block.hash)
+  first_block.hash = 'something else'
+  expect(blockchain.isChainValid()).toBe(false)
 })
