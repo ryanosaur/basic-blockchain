@@ -1,25 +1,66 @@
 const Block = require('./Block')
+const Transaction = require('./Transaction')
 
 class Blockchain {
-  constructor(difficulty = 4) {
+  constructor(difficulty = 3) {
     this.chain = [this.createGenesisBlock()]
     this.difficulty = difficulty
+    this.pendingTransactions = []
+    this.miningReward = 100
   }
 
   createGenesisBlock() {
-    return new Block(0, Date.now(), "Genesis Block", '0')
+    return new Block(Date.now(), [new Transaction(null, 'ryano', 500)], '0')
   }
 
   getLatestBlock() {
     return this.chain[this.chain.length - 1]
   }
 
-  addBlock(newBlock) {
-    const latest_block = this.getLatestBlock()
-    newBlock.index = latest_block.index + 1
-    newBlock.previousHash = latest_block.hash
-    newBlock.mineBlock(this.difficulty)
-    this.chain.push(newBlock)
+  // addBlock(newBlock) {
+  //   const latest_block = this.getLatestBlock()
+  //   newBlock.index = latest_block.index + 1
+  //   newBlock.previousHash = latest_block.hash
+  //   newBlock.mineBlock(this.difficulty)
+  //   this.chain.push(newBlock)
+  // }
+
+  createTransaction(transaction) {
+    if (!transaction.toAddress) {
+      console.log('Transaction requires have toAddress')
+    } else {
+      this.pendingTransactions.push(transaction)
+    }
+  }
+
+  minePendingTransactions(miningRewardAddress) {
+    const block = new Block(Date.now(), this.pendingTransactions)
+    block.mineBlock(this.difficulty)
+
+    this.chain.push(block)
+
+    this.pendingTransactions = [
+      new Transaction(null, miningRewardAddress, this.miningReward)
+    ]
+  }
+
+  getBalanceOfAddress(address) {
+    let balance = 0
+
+    for (const block of this.chain) {
+      for (const transaction of block.transactions) {
+
+        if (transaction.fromAddress === address) {
+          balance -= transaction.amount
+        }
+
+        if (transaction.toAddress === address) {
+          balance += transaction.amount
+        }
+      }
+    }
+
+    return balance
   }
 
   isChainValid() {
