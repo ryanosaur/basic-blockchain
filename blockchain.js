@@ -1,5 +1,5 @@
-const Block = require('./Block')
-const Transaction = require('./Transaction')
+const Block = require('./block')
+const Transaction = require('./transaction')
 
 class Blockchain {
   constructor(difficulty = 3) {
