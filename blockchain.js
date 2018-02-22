@@ -19,7 +19,7 @@ class Blockchain {
 
   createTransaction(transaction) {
     if (!transaction.toAddress) {
-      console.log('Transaction requires have toAddress')
+      console.log('Transaction requires toAddress')
     } else {
       this.pendingTransactions.push(transaction)
     }
