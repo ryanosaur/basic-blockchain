@@ -55,14 +55,14 @@ class Blockchain {
     return balance
   }
 
-  isChainValid() {
-    return this.chain.every((block, index) => {
+  chainHasIntegrity(chain) {
+    return chain.every((block, index) => {
       if (index === 0) {
         // NOTE: for Genesis Block
         return true
       }
 
-      const prevBlock = this.chain[index - 1]
+      const prevBlock = chain[index - 1]
 
       if (block.hash !== block.calculateHash()) {
         return false
@@ -73,6 +73,20 @@ class Blockchain {
 
       return true
     })
+  }
+
+  isChainValid() {
+    return this.chainHasIntegrity(this.chain)
+  }
+
+  replaceChain(newChain, success, failure) {
+    if (this.chainHasIntegrity(newChain) && (newChain.length > this.chain.length)) {
+      console.log('Recieved new chain')
+      this.chain = newChain
+      success()
+    } else {
+      failure()
+    }
   }
 }
 
