@@ -3,21 +3,19 @@ const bodyParser = require('body-parser')
 const WebSocket = require('ws')
 
 const Blockchain = require('./blockchain')
+const BlockPeers = require('./sockets')
 
 const httpPort = process.env.HTTP_PORT || 3001
 const p2pPort = process.env.P2P_PORT || 6001
 const initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : []
 
-const sockets = []
-const SocketMessageTypes = {
-  QUERY_LATEST: 0,
-  QUERY_ALL: 1,
-  RESPONSE_BLOCKCHAIN: 2,
+const initializeP2PServer = (p2pPort, blockchain) => {
+  const server = new WebSocket.Server({ port: p2pPort })
+  console.log(`listening websocket p2p port on: ${p2pPort}`)
+  return new BlockPeers(server, blockchain)
 }
 
-const blockchain = new Blockchain()
-
-const initializeHttpServer = () => {
+const initializeHttpServer = (httpPort, blockchain, peers) => {
   const app = express()
   app.use(bodyParser.json())
 
@@ -31,4 +29,6 @@ const initializeHttpServer = () => {
   app.listen(httpPort, () => console.log(`Listening http on port: ${httpPort}`))
 }
 
-initializeHttpServer()
+const blockchain = new Blockchain()
+const peers = initializeP2PServer(p2pPort, blockchain)
+initializeHttpServer(httpPort, blockchain, peers)
