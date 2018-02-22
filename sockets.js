@@ -17,8 +17,8 @@ class BlockPeers {
   initializeConnection(peer) {
     this.peers.push(peer)
     this.initMessageHandler(peer)
-    init.initErrorHandler(peer)
-    this.write(peer, queryChainLengthMsg())
+    this.initErrorHandler(peer)
+    this.write(peer, this.queryChainLengthMsg())
   }
 
   initMessageHandler(peer) {
@@ -51,7 +51,7 @@ class BlockPeers {
 
   connectToPeers(newPeers) {
     newPeers.forEach(url => {
-      const peer = new WebSocket(url)
+      const peer = new WebSocket(`ws:${url}`)
       peer.on('open', () => this.initializeConnection(peer))
       peer.on('error', () => {
         console.log('connection failed')

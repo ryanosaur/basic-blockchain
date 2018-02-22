@@ -9,14 +9,15 @@ const httpPort = process.env.PORT || 3001
 const p2pPort = process.env.P2P_PORT || 6001
 const initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : []
 
-const initializeP2PServer = (p2pPort, blockchain) => {
-  const server = new WebSocket.Server({ port: p2pPort })
+const initializeP2PServer = (p2pPort, blockchain, app) => {
+  const server = new WebSocket.Server({ port: p2pPort, server: app })
   console.log(`listening websocket p2p port on: ${p2pPort}`)
   return new BlockPeers(server, blockchain)
 }
 
-const initializeHttpServer = (httpPort, blockchain, peers) => {
+const initializeHttpServer = (httpPort, blockchain, p2pPort) => {
   const app = express()
+  const peers = initializeP2PServer(p2pPort, blockchain, app)
   app.use(bodyParser.json())
 
   app.get('/blocks', (req, res) => res.json(blockchain.chain))
@@ -40,6 +41,4 @@ const initializeHttpServer = (httpPort, blockchain, peers) => {
   app.listen(httpPort, () => console.log(`Listening http on port: ${httpPort}`))
 }
 
-const blockchain = new Blockchain()
-const peers = initializeP2PServer(p2pPort, blockchain)
-initializeHttpServer(httpPort, blockchain, peers)
+initializeHttpServer(httpPort, new Blockchain(), p2pPort)
