@@ -4,7 +4,8 @@
   "description": "A basic blockchain implemented in Node.js",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "start": "node index.js"
   },
   "author": "ryanosaur",
   "license": "ISC",
