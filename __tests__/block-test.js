@@ -1,6 +1,6 @@
 const Block = require('../block')
 
 test('new block creates correct hash', () => {
-  const test_block = new Block(0, 1519233279412, 'test block', '0')
-  expect(test_block.hash).toBe('09bceef466132ceacbde0afec37c64631874a71c0f39993e13a7605c1c8beeba');
+  const test_block = new Block(1519233279412, [], '0')
+  expect(test_block.hash).toBe('4d4b4d72d99959fd9684e0761ad0c7094d2715b015112889d1a5bc550ee3ac34');
 })

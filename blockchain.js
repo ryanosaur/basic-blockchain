@@ -17,14 +17,6 @@ class Blockchain {
     return this.chain[this.chain.length - 1]
   }
 
-  // addBlock(newBlock) {
-  //   const latest_block = this.getLatestBlock()
-  //   newBlock.index = latest_block.index + 1
-  //   newBlock.previousHash = latest_block.hash
-  //   newBlock.mineBlock(this.difficulty)
-  //   this.chain.push(newBlock)
-  // }
-
   createTransaction(transaction) {
     if (!transaction.toAddress) {
       console.log('Transaction requires have toAddress')
@@ -34,7 +26,7 @@ class Blockchain {
   }
 
   minePendingTransactions(miningRewardAddress) {
-    const block = new Block(Date.now(), this.pendingTransactions)
+    const block = new Block(Date.now(), this.pendingTransactions, this.getLatestBlock().hash)
     block.mineBlock(this.difficulty)
 
     this.chain.push(block)
