@@ -5,7 +5,7 @@ const WebSocket = require('ws')
 const Blockchain = require('./blockchain')
 const BlockPeers = require('./sockets')
 
-const httpPort = process.env.HTTP_PORT || 3001
+const httpPort = process.env.PORT || 3001
 const p2pPort = process.env.P2P_PORT || 6001
 const initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : []
 
