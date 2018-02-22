@@ -49,6 +49,16 @@ class BlockPeers {
     }
   }
 
+  connectToPeers(newPeers) {
+    newPeers.forEach(url => {
+      const peer = new WebSocket(url)
+      peer.on('open', () => this.initializeConnection(peer))
+      peer.on('error', () => {
+        console.log('connection failed')
+      })
+    })
+  }
+
   removePeer(peer) {
     console.log(`removing peer from network: ${peer.url}`)
     this.peers.splice(this.peers.indexOf(peer), 1)
