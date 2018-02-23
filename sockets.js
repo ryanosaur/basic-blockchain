@@ -41,7 +41,9 @@ class BlockPeers {
 
   handleBlockchainResponse(message) {
     const newChain = JSON.parse(message.data)
-    if (newChain.length > this.blockchain.length) {
+    console.log(`new`, JSON.stringify(newChain, null, 2));
+    console.log(`curr`, JSON.stringify(this.blockchain.chain, null, 2));
+    if (newChain.length > this.blockchain.chain.length) {
       console.log('Received blockchain is longer than current blockchain')
       this.blockchain.replaceChain(newChain)
     } else {
@@ -84,7 +86,7 @@ class BlockPeers {
   responseChainMsg(){
     return {
       type: SocketMessageTypes.RESPONSE_BLOCKCHAIN,
-      data: JSON.stringify(this.blockchain)
+      data: JSON.stringify(this.blockchain.chain)
     }
   }
 
@@ -102,7 +104,7 @@ class BlockPeers {
   }
 
   broadcast(message) {
-    this.peers.forEach(peer => write(peer, message))
+    this.peers.forEach(peer => this.write(peer, message))
   }
 }
 

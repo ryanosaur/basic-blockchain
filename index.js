@@ -22,11 +22,21 @@ const initializeHttpServer = (httpPort, blockchain, p2pPort) => {
 
   app.get('/blocks', (req, res) => res.json(blockchain.chain))
 
-  app.get('/', (req, res) => res.send(`<pre>${JSON.stringify(blockchain.chain, null, 2)}</pre>`))
+  app.get('/', (req, res) => res.send(`
+    <pre>
+      ${JSON.stringify(blockchain.chain, null, 2)}
+    </pre>
+  `))
 
   app.get('/mine/:user', (req, res) => {
     blockchain.minePendingTransactions(req.params.user || 'ryano')
-    res.send(`Block Mined: <br /><pre>${JSON.stringify(blockchain.getLatestBlock(), null, 2)}</pre>`)
+    peers.broadcast(peers.responseChainMsg())
+    res.send(`
+      Block Mined: <br />
+      <pre>
+        ${JSON.stringify(blockchain.getLatestBlock(), null, 2)}
+      </pre>
+    `)
   })
 
   app.get('/add_peer/:peer', (req, res) => {
